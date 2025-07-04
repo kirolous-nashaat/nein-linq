@@ -119,8 +119,11 @@ public static class DynamicExpression
 
         var converter = Cache.GetOrAdd(type, CreateConverter);
         var convertedValue = converter(value!, provider);
+        
+        Expression<Func<object>> urlParameterLambda = () => convertedValue;
+        var urlParamExpression = urlParameterLambda.Body;
 
-        return Expression.Constant(convertedValue, type);
+        return urlParamExpression;
     }
 
     private static Func<string, IFormatProvider?, object> CreateConverter(Type type)
